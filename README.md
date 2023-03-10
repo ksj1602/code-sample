@@ -4,8 +4,6 @@ This is a code sample in C++ from one of my past projects [Goober Eats](https://
 
 This particular code sample, contained in `PointToPointRouter.cpp`, deals with one of the key parts of the program: generating the optimal route from one point to another. It does so using Dijkstra's algorithm. In the overarching program, this method is repeatedly called to calculate the route between two points and then by chaining such routes, the program aims to output a route for all the deliveries.
 
-In this particular code sample, the original code has been slightly modified to reflect improvements I thought of later on.
-
 For context, here are the definitions of some of the structures/classes used in the code:
 
 ```c++
