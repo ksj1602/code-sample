@@ -1,51 +1,3 @@
-#include "provided.h"
-#include "ExpandableHashMap.h"
-#include <list>
-#include <limits>
-#include <iostream>
-#include <set>
-using namespace std;
-
-#define MAX_DOUBLE numeric_limits<double>::max()
-
-// declaring additional struct for implementing Dijkstra's Algorithm
-// This additional functionality is needed to elegantly implement generatePointToPointRoute
-struct processCoord {
-
-    // the location of a processCoord is that of the GeoCoord it represents
-    GeoCoord location;
-
-    // variable required for Dijkstra's algorithm implementation
-    double distanceFromSource = MAX_DOUBLE; // initializing all distances to infinity by default
-
-    // < operator defined to use sets of processCoords, ordered by distance
-    bool operator<(const processCoord &rhs) const {
-        return (this->distanceFromSource < rhs.distanceFromSource);
-    }
-};
-
-class PointToPointRouterImpl
-{
-public:
-    PointToPointRouterImpl(const StreetMap* sm);
-    ~PointToPointRouterImpl();
-    DeliveryResult generatePointToPointRoute(
-        const GeoCoord& start,
-        const GeoCoord& end,
-        list<StreetSegment>& route,
-        double& totalDistanceTravelled) const;
-
-private:
-    const StreetMap* m_streetMap;
-};
-
-PointToPointRouterImpl::PointToPointRouterImpl(const StreetMap* sm)
-    : m_streetMap(sm)
-{
-}
-
-PointToPointRouterImpl::~PointToPointRouterImpl() = default;
-
 DeliveryResult PointToPointRouterImpl::generatePointToPointRoute(
         const GeoCoord& start,
         const GeoCoord& end,
@@ -181,28 +133,4 @@ DeliveryResult PointToPointRouterImpl::generatePointToPointRoute(
 
     // NO_ROUTE returned when after all the processing, we could not find a route from source to destination
     return NO_ROUTE;
-}
-
-//******************** PointToPointRouter functions ***************************
-
-// These functions simply delegate to PointToPointRouterImpl's functions.
-// You probably don't want to change any of this code.
-
-PointToPointRouter::PointToPointRouter(const StreetMap* sm)
-{
-    m_impl = new PointToPointRouterImpl(sm);
-}
-
-PointToPointRouter::~PointToPointRouter()
-{
-    delete m_impl;
-}
-
-DeliveryResult PointToPointRouter::generatePointToPointRoute(
-        const GeoCoord& start,
-        const GeoCoord& end,
-        list<StreetSegment>& route,
-        double& totalDistanceTravelled) const
-{
-    return m_impl->generatePointToPointRoute(start, end, route, totalDistanceTravelled);
 }
